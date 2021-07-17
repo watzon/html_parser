@@ -1,13 +1,13 @@
 import {
-    isTag,
-    isCDATA,
-    isText,
-    hasChildren,
-    Node,
-    isComment,
-} from '../Node.ts'
-import renderHTML, { DomSerializerOptions } from '../DomSerializer.ts'
-import { ElementType } from '../ElementType.ts'
+  hasChildren,
+  isCDATA,
+  isComment,
+  isTag,
+  isText,
+  Node,
+} from "../Node.ts";
+import renderHTML, { DomSerializerOptions } from "../DomSerializer.ts";
+import { ElementType } from "../ElementType.ts";
 
 /**
  * @param node Node to get the outer HTML of.
@@ -16,10 +16,10 @@ import { ElementType } from '../ElementType.ts'
  * @returns `node`'s outer HTML.
  */
 export function getOuterHTML(
-    node: Node | Node[],
-    options?: DomSerializerOptions
+  node: Node | Node[],
+  options?: DomSerializerOptions,
 ): string {
-    return renderHTML(node, options)
+  return renderHTML(node, options);
 }
 
 /**
@@ -29,12 +29,12 @@ export function getOuterHTML(
  * @returns `node`'s inner HTML.
  */
 export function getInnerHTML(
-    node: Node,
-    options?: DomSerializerOptions
+  node: Node,
+  options?: DomSerializerOptions,
 ): string {
-    return hasChildren(node)
-        ? node.children.map(node => getOuterHTML(node, options)).join('')
-        : ''
+  return hasChildren(node)
+    ? node.children.map((node) => getOuterHTML(node, options)).join("")
+    : "";
 }
 
 /**
@@ -45,11 +45,11 @@ export function getInnerHTML(
  * @returns `node`'s inner text.
  */
 export function getText(node: Node | Node[]): string {
-    if (Array.isArray(node)) return node.map(getText).join('')
-    if (isTag(node)) return node.name === 'br' ? '\n' : getText(node.children)
-    if (isCDATA(node)) return getText(node.children)
-    if (isText(node)) return node.data
-    return ''
+  if (Array.isArray(node)) return node.map(getText).join("");
+  if (isTag(node)) return node.name === "br" ? "\n" : getText(node.children);
+  if (isCDATA(node)) return getText(node.children);
+  if (isText(node)) return node.data;
+  return "";
 }
 
 /**
@@ -60,12 +60,12 @@ export function getText(node: Node | Node[]): string {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent}
  */
 export function textContent(node: Node | Node[]): string {
-    if (Array.isArray(node)) return node.map(textContent).join('')
-    if (hasChildren(node) && !isComment(node)) {
-        return textContent(node.children)
-    }
-    if (isText(node)) return node.data
-    return ''
+  if (Array.isArray(node)) return node.map(textContent).join("");
+  if (hasChildren(node) && !isComment(node)) {
+    return textContent(node.children);
+  }
+  if (isText(node)) return node.data;
+  return "";
 }
 
 /**
@@ -76,10 +76,10 @@ export function textContent(node: Node | Node[]): string {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Node/innerText}
  */
 export function innerText(node: Node | Node[]): string {
-    if (Array.isArray(node)) return node.map(innerText).join('')
-    if (hasChildren(node) && (node.type === ElementType.Tag || isCDATA(node))) {
-        return innerText(node.children)
-    }
-    if (isText(node)) return node.data
-    return ''
+  if (Array.isArray(node)) return node.map(innerText).join("");
+  if (hasChildren(node) && (node.type === ElementType.Tag || isCDATA(node))) {
+    return innerText(node.children);
+  }
+  if (isText(node)) return node.data;
+  return "";
 }

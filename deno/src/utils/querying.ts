@@ -1,4 +1,4 @@
-import { isTag, hasChildren, Node, Element } from '../Node.ts'
+import { Element, hasChildren, isTag, Node } from "../Node.ts";
 
 /**
  * Search a node and its children for nodes passing a test function.
@@ -10,13 +10,13 @@ import { isTag, hasChildren, Node, Element } from '../Node.ts'
  * @returns All nodes passing `test`.
  */
 export function filter(
-    test: (elem: Node) => boolean,
-    node: Node | Node[],
-    recurse = true,
-    limit = Infinity
+  test: (elem: Node) => boolean,
+  node: Node | Node[],
+  recurse = true,
+  limit = Infinity,
 ): Node[] {
-    if (!Array.isArray(node)) node = [node]
-    return find(test, node, recurse, limit)
+  if (!Array.isArray(node)) node = [node];
+  return find(test, node, recurse, limit);
 }
 
 /**
@@ -29,28 +29,28 @@ export function filter(
  * @returns All nodes passing `test`.
  */
 export function find(
-    test: (elem: Node) => boolean,
-    nodes: Node[],
-    recurse: boolean,
-    limit: number
+  test: (elem: Node) => boolean,
+  nodes: Node[],
+  recurse: boolean,
+  limit: number,
 ): Node[] {
-    const result: Node[] = []
+  const result: Node[] = [];
 
-    for (const elem of nodes) {
-        if (test(elem)) {
-            result.push(elem)
-            if (--limit <= 0) break
-        }
-
-        if (recurse && hasChildren(elem) && elem.children.length > 0) {
-            const children = find(test, elem.children, recurse, limit)
-            result.push(...children)
-            limit -= children.length
-            if (limit <= 0) break
-        }
+  for (const elem of nodes) {
+    if (test(elem)) {
+      result.push(elem);
+      if (--limit <= 0) break;
     }
 
-    return result
+    if (recurse && hasChildren(elem) && elem.children.length > 0) {
+      const children = find(test, elem.children, recurse, limit);
+      result.push(...children);
+      limit -= children.length;
+      if (limit <= 0) break;
+    }
+  }
+
+  return result;
 }
 
 /**
@@ -61,10 +61,10 @@ export function find(
  * @returns The first node in the array that passes `test`.
  */
 export function findOneChild(
-    test: (elem: Node) => boolean,
-    nodes: Node[]
+  test: (elem: Node) => boolean,
+  nodes: Node[],
 ): Node | undefined {
-    return nodes.find(test)
+  return nodes.find(test);
 }
 
 /**
@@ -76,24 +76,24 @@ export function findOneChild(
  * @returns The first child node that passes `test`.
  */
 export function findOne(
-    test: (elem: Element) => boolean,
-    nodes: Node[],
-    recurse = true
+  test: (elem: Element) => boolean,
+  nodes: Node[],
+  recurse = true,
 ): Element | null {
-    let elem = null
+  let elem = null;
 
-    for (let i = 0; i < nodes.length && !elem; i++) {
-        const checked = nodes[i]!
-        if (!isTag(checked)) {
-            continue
-        } else if (test(checked)) {
-            elem = checked
-        } else if (recurse && checked.children.length > 0) {
-            elem = findOne(test, checked.children)
-        }
+  for (let i = 0; i < nodes.length && !elem; i++) {
+    const checked = nodes[i]!;
+    if (!isTag(checked)) {
+      continue;
+    } else if (test(checked)) {
+      elem = checked;
+    } else if (recurse && checked.children.length > 0) {
+      elem = findOne(test, checked.children);
     }
+  }
 
-    return elem
+  return elem;
 }
 
 /**
@@ -102,16 +102,16 @@ export function findOne(
  * @returns Whether a tree of nodes contains at least one node passing a test.
  */
 export function existsOne(
-    test: (elem: Element) => boolean,
-    nodes: Node[]
+  test: (elem: Element) => boolean,
+  nodes: Node[],
 ): boolean {
-    return nodes.some(
-        checked =>
-            isTag(checked) &&
-            (test(checked) ||
-                (checked.children.length > 0 &&
-                    existsOne(test, checked.children)))
-    )
+  return nodes.some(
+    (checked) =>
+      isTag(checked) &&
+      (test(checked) ||
+        (checked.children.length > 0 &&
+          existsOne(test, checked.children))),
+  );
 }
 
 /**
@@ -124,18 +124,18 @@ export function existsOne(
  * @returns All nodes passing `test`.
  */
 export function findAll(
-    test: (elem: Element) => boolean,
-    nodes: Node[]
+  test: (elem: Element) => boolean,
+  nodes: Node[],
 ): Element[] {
-    const result: Element[] = []
-    const stack = nodes.filter(isTag)
-    let elem
-    while ((elem = stack.shift())) {
-        const children = elem.children?.filter(isTag)
-        if (children && children.length > 0) {
-            stack.unshift(...children)
-        }
-        if (test(elem)) result.push(elem)
+  const result: Element[] = [];
+  const stack = nodes.filter(isTag);
+  let elem;
+  while ((elem = stack.shift())) {
+    const children = elem.children?.filter(isTag);
+    if (children && children.length > 0) {
+      stack.unshift(...children);
     }
-    return result
+    if (test(elem)) result.push(elem);
+  }
+  return result;
 }

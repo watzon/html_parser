@@ -1,4 +1,4 @@
-import { hasChildren, Node } from '../Node.ts'
+import { hasChildren, Node } from "../Node.ts";
 
 /**
  * Given an array of nodes, remove any member that is contained by another.
@@ -7,43 +7,43 @@ import { hasChildren, Node } from '../Node.ts'
  * @returns Remaining nodes that aren't subtrees of each other.
  */
 export function removeSubsets(nodes: Node[]): Node[] {
-    let idx = nodes.length
+  let idx = nodes.length;
 
-    /*
+  /*
      * Check if each node (or one of its ancestors) is already contained in the
      * array.
      */
-    while (--idx >= 0) {
-        const node = nodes[idx]!
+  while (--idx >= 0) {
+    const node = nodes[idx]!;
 
-        /*
+    /*
          * Remove the node if it is not unique.
          * We are going through the array from the end, so we only
          * have to check nodes that preceed the node under consideration in the array.
          */
-        if (idx > 0 && nodes.lastIndexOf(node, idx - 1) >= 0) {
-            nodes.splice(idx, 1)
-            continue
-        }
-
-        for (let ancestor = node.parent; ancestor; ancestor = ancestor.parent) {
-            if (nodes.includes(ancestor)) {
-                nodes.splice(idx, 1)
-                break
-            }
-        }
+    if (idx > 0 && nodes.lastIndexOf(node, idx - 1) >= 0) {
+      nodes.splice(idx, 1);
+      continue;
     }
 
-    return nodes
+    for (let ancestor = node.parent; ancestor; ancestor = ancestor.parent) {
+      if (nodes.includes(ancestor)) {
+        nodes.splice(idx, 1);
+        break;
+      }
+    }
+  }
+
+  return nodes;
 }
 
 // Source: http://dom.spec.whatwg.org/#dom-node-comparedocumentposition
 export const enum DocumentPosition {
-    DISCONNECTED = 1,
-    PRECEDING = 2,
-    FOLLOWING = 4,
-    CONTAINS = 8,
-    CONTAINED_BY = 16,
+  DISCONNECTED = 1,
+  PRECEDING = 2,
+  FOLLOWING = 4,
+  CONTAINS = 8,
+  CONTAINED_BY = 16,
 }
 
 /**
@@ -72,49 +72,49 @@ export const enum DocumentPosition {
  * a description of these values.
  */
 export function compareDocumentPosition(nodeA: Node, nodeB: Node): number {
-    const aParents = []
-    const bParents = []
+  const aParents = [];
+  const bParents = [];
 
-    if (nodeA === nodeB) {
-        return 0
-    }
+  if (nodeA === nodeB) {
+    return 0;
+  }
 
-    let current = hasChildren(nodeA) ? nodeA : nodeA.parent
-    while (current) {
-        aParents.unshift(current)
-        current = current.parent
-    }
-    current = hasChildren(nodeB) ? nodeB : nodeB.parent
-    while (current) {
-        bParents.unshift(current)
-        current = current.parent
-    }
+  let current = hasChildren(nodeA) ? nodeA : nodeA.parent;
+  while (current) {
+    aParents.unshift(current);
+    current = current.parent;
+  }
+  current = hasChildren(nodeB) ? nodeB : nodeB.parent;
+  while (current) {
+    bParents.unshift(current);
+    current = current.parent;
+  }
 
-    const maxIdx = Math.min(aParents.length, bParents.length)
-    let idx = 0
-    while (idx < maxIdx && aParents[idx] === bParents[idx]) {
-        idx++
-    }
+  const maxIdx = Math.min(aParents.length, bParents.length);
+  let idx = 0;
+  while (idx < maxIdx && aParents[idx] === bParents[idx]) {
+    idx++;
+  }
 
-    if (idx === 0) {
-        return DocumentPosition.DISCONNECTED
-    }
+  if (idx === 0) {
+    return DocumentPosition.DISCONNECTED;
+  }
 
-    const sharedParent = aParents[idx - 1]!
-    const siblings = sharedParent.children
-    const aSibling = aParents[idx]!
-    const bSibling = bParents[idx]!
+  const sharedParent = aParents[idx - 1]!;
+  const siblings = sharedParent.children;
+  const aSibling = aParents[idx]!;
+  const bSibling = bParents[idx]!;
 
-    if (siblings.indexOf(aSibling) > siblings.indexOf(bSibling)) {
-        if (sharedParent === nodeB) {
-            return DocumentPosition.FOLLOWING | DocumentPosition.CONTAINED_BY
-        }
-        return DocumentPosition.FOLLOWING
+  if (siblings.indexOf(aSibling) > siblings.indexOf(bSibling)) {
+    if (sharedParent === nodeB) {
+      return DocumentPosition.FOLLOWING | DocumentPosition.CONTAINED_BY;
     }
-    if (sharedParent === nodeA) {
-        return DocumentPosition.PRECEDING | DocumentPosition.CONTAINS
-    }
-    return DocumentPosition.PRECEDING
+    return DocumentPosition.FOLLOWING;
+  }
+  if (sharedParent === nodeA) {
+    return DocumentPosition.PRECEDING | DocumentPosition.CONTAINS;
+  }
+  return DocumentPosition.PRECEDING;
 }
 
 /**
@@ -126,17 +126,17 @@ export function compareDocumentPosition(nodeA: Node, nodeB: Node): number {
  * @returns Collection of unique nodes, sorted in document order.
  */
 export function uniqueSort<T extends Node>(nodes: T[]): T[] {
-    nodes = nodes.filter((node, i, arr) => !arr.includes(node, i + 1))
+  nodes = nodes.filter((node, i, arr) => !arr.includes(node, i + 1));
 
-    nodes.sort((a, b) => {
-        const relative = compareDocumentPosition(a, b)
-        if (relative & DocumentPosition.PRECEDING) {
-            return -1
-        } else if (relative & DocumentPosition.FOLLOWING) {
-            return 1
-        }
-        return 0
-    })
+  nodes.sort((a, b) => {
+    const relative = compareDocumentPosition(a, b);
+    if (relative & DocumentPosition.PRECEDING) {
+      return -1;
+    } else if (relative & DocumentPosition.FOLLOWING) {
+      return 1;
+    }
+    return 0;
+  });
 
-    return nodes
+  return nodes;
 }
