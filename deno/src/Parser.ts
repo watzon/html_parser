@@ -1,23 +1,23 @@
-import Tokenizer from "./Tokenizer.ts";
+import Tokenizer from './Tokenizer.ts'
 
 const formTags = new Set([
-    "input",
-    "option",
-    "optgroup",
-    "select",
-    "button",
-    "datalist",
-    "textarea",
-]);
+    'input',
+    'option',
+    'optgroup',
+    'select',
+    'button',
+    'datalist',
+    'textarea',
+])
 
-const pTag = new Set(["p"]);
+const pTag = new Set(['p'])
 
 const openImpliesClose: Record<string, Set<string>> = {
-    tr: new Set(["tr", "th", "td"]),
-    th: new Set(["th"]),
-    td: new Set(["thead", "th", "td"]),
-    body: new Set(["head", "link", "script"]),
-    li: new Set(["li"]),
+    tr: new Set(['tr', 'th', 'td']),
+    th: new Set(['th']),
+    td: new Set(['thead', 'th', 'td']),
+    body: new Set(['head', 'link', 'script']),
+    li: new Set(['li']),
     p: pTag,
     h1: pTag,
     h2: pTag,
@@ -31,10 +31,10 @@ const openImpliesClose: Record<string, Set<string>> = {
     button: formTags,
     datalist: formTags,
     textarea: formTags,
-    option: new Set(["option"]),
-    optgroup: new Set(["optgroup", "option"]),
-    dd: new Set(["dt", "dd"]),
-    dt: new Set(["dt", "dd"]),
+    option: new Set(['option']),
+    optgroup: new Set(['optgroup', 'option']),
+    dd: new Set(['dt', 'dd']),
+    dt: new Set(['dt', 'dd']),
     address: pTag,
     article: pTag,
     aside: pTag,
@@ -56,47 +56,47 @@ const openImpliesClose: Record<string, Set<string>> = {
     section: pTag,
     table: pTag,
     ul: pTag,
-    rt: new Set(["rt", "rp"]),
-    rp: new Set(["rt", "rp"]),
-    tbody: new Set(["thead", "tbody"]),
-    tfoot: new Set(["thead", "tbody"]),
-};
+    rt: new Set(['rt', 'rp']),
+    rp: new Set(['rt', 'rp']),
+    tbody: new Set(['thead', 'tbody']),
+    tfoot: new Set(['thead', 'tbody']),
+}
 
 const voidElements = new Set([
-    "area",
-    "base",
-    "basefont",
-    "br",
-    "col",
-    "command",
-    "embed",
-    "frame",
-    "hr",
-    "img",
-    "input",
-    "isindex",
-    "keygen",
-    "link",
-    "meta",
-    "param",
-    "source",
-    "track",
-    "wbr",
-]);
+    'area',
+    'base',
+    'basefont',
+    'br',
+    'col',
+    'command',
+    'embed',
+    'frame',
+    'hr',
+    'img',
+    'input',
+    'isindex',
+    'keygen',
+    'link',
+    'meta',
+    'param',
+    'source',
+    'track',
+    'wbr',
+])
 
-const foreignContextElements = new Set(["math", "svg"]);
+const foreignContextElements = new Set(['math', 'svg'])
 
 const htmlIntegrationElements = new Set([
-    "mi",
-    "mo",
-    "mn",
-    "ms",
-    "mtext",
-    "annotation-xml",
-    "foreignObject",
-    "desc",
-    "title",
-]);
+    'mi',
+    'mo',
+    'mn',
+    'ms',
+    'mtext',
+    'annotation-xml',
+    'foreignObject',
+    'desc',
+    'title',
+])
 
 export interface ParserOptions {
     /**
@@ -107,28 +107,28 @@ export interface ParserOptions {
      *
      * @default false
      */
-    xmlMode?: boolean;
+    xmlMode?: boolean
 
     /**
      * Decode entities within the document.
      *
      * @default true
      */
-    decodeEntities?: boolean;
+    decodeEntities?: boolean
 
     /**
      * If set to true, all tags will be lowercased.
      *
      * @default !xmlMode
      */
-    lowerCaseTags?: boolean;
+    lowerCaseTags?: boolean
 
     /**
      * If set to `true`, all attribute names will be lowercased. This has noticeable impact on speed.
      *
      * @default !xmlMode
      */
-    lowerCaseAttributeNames?: boolean;
+    lowerCaseAttributeNames?: boolean
 
     /**
      * If set to true, CDATA sections will be recognized as text even if the xmlMode option is not enabled.
@@ -136,7 +136,7 @@ export interface ParserOptions {
      *
      * @default xmlMode
      */
-    recognizeCDATA?: boolean;
+    recognizeCDATA?: boolean
 
     /**
      * If set to `true`, self-closing tags will trigger the onclosetag event even if xmlMode is not set to `true`.
@@ -144,29 +144,29 @@ export interface ParserOptions {
      *
      * @default xmlMode
      */
-    recognizeSelfClosing?: boolean;
+    recognizeSelfClosing?: boolean
 
     /**
      * Allows the default tokenizer to be overwritten.
      */
-    Tokenizer?: typeof Tokenizer;
+    Tokenizer?: typeof Tokenizer
 }
 
 export interface Handler {
-    onparserinit(parser: Parser): void;
+    onparserinit(parser: Parser): void
 
     /**
      * Resets the handler back to starting state
      */
-    onreset(): void;
+    onreset(): void
 
     /**
      * Signals the handler that parsing is done
      */
-    onend(): void;
-    onerror(error: Error): void;
-    onclosetag(name: string): void;
-    onopentagname(name: string): void;
+    onend(): void
+    onerror(error: Error): void
+    onclosetag(name: string): void
+    onopentagname(name: string): void
     /**
      *
      * @param name Name of the attribute
@@ -177,144 +177,144 @@ export interface Handler {
         name: string,
         value: string,
         quote?: string | undefined | null
-    ): void;
-    onopentag(name: string, attribs: { [s: string]: string }): void;
-    ontext(data: string): void;
-    oncomment(data: string): void;
-    oncdatastart(): void;
-    oncdataend(): void;
-    oncommentend(): void;
-    onprocessinginstruction(name: string, data: string): void;
+    ): void
+    onopentag(name: string, attribs: { [s: string]: string }): void
+    ontext(data: string): void
+    oncomment(data: string): void
+    oncdatastart(): void
+    oncdataend(): void
+    oncommentend(): void
+    onprocessinginstruction(name: string, data: string): void
 }
 
-const reNameEnd = /\s|\//;
+const reNameEnd = /\s|\//
 
 export class Parser {
     /** The start index of the last event. */
-    public startIndex = 0;
+    public startIndex = 0
     /** The end index of the last event. */
-    public endIndex: number | null = null;
+    public endIndex: number | null = null
 
-    private tagname = "";
-    private attribname = "";
-    private attribvalue = "";
-    private attribs: null | { [key: string]: string } = null;
-    private stack: string[] = [];
-    private readonly foreignContext: boolean[] = [];
-    private readonly cbs: Partial<Handler>;
-    private readonly options: ParserOptions;
-    private readonly lowerCaseTagNames: boolean;
-    private readonly lowerCaseAttributeNames: boolean;
-    private readonly tokenizer: Tokenizer;
+    private tagname = ''
+    private attribname = ''
+    private attribvalue = ''
+    private attribs: null | { [key: string]: string } = null
+    private stack: string[] = []
+    private readonly foreignContext: boolean[] = []
+    private readonly cbs: Partial<Handler>
+    private readonly options: ParserOptions
+    private readonly lowerCaseTagNames: boolean
+    private readonly lowerCaseAttributeNames: boolean
+    private readonly tokenizer: Tokenizer
 
     constructor(cbs: Partial<Handler> | null, options: ParserOptions = {}) {
-        this.options = options;
-        this.cbs = cbs ?? {};
-        this.lowerCaseTagNames = options.lowerCaseTags ?? !options.xmlMode;
+        this.options = options
+        this.cbs = cbs ?? {}
+        this.lowerCaseTagNames = options.lowerCaseTags ?? !options.xmlMode
         this.lowerCaseAttributeNames =
-            options.lowerCaseAttributeNames ?? !options.xmlMode;
+            options.lowerCaseAttributeNames ?? !options.xmlMode
         this.tokenizer = new (options.Tokenizer ?? Tokenizer)(
             this.options,
             this
-        );
-        this.cbs.onparserinit?.(this);
+        )
+        this.cbs.onparserinit?.(this)
     }
 
     private updatePosition(initialOffset: number) {
         if (this.endIndex === null) {
             if (this.tokenizer.sectionStart <= initialOffset) {
-                this.startIndex = 0;
+                this.startIndex = 0
             } else {
-                this.startIndex = this.tokenizer.sectionStart - initialOffset;
+                this.startIndex = this.tokenizer.sectionStart - initialOffset
             }
         } else {
-            this.startIndex = this.endIndex + 1;
+            this.startIndex = this.endIndex + 1
         }
-        this.endIndex = this.tokenizer.getAbsoluteIndex();
+        this.endIndex = this.tokenizer.getAbsoluteIndex()
     }
 
     // Tokenizer event handlers
     ontext(data: string): void {
-        this.updatePosition(1);
-        (this.endIndex as number)--;
-        this.cbs.ontext?.(data);
+        this.updatePosition(1)
+        ;(this.endIndex as number)--
+        this.cbs.ontext?.(data)
     }
 
     isVoidElement(name: string): boolean {
-        return !this.options.xmlMode && voidElements.has(name);
+        return !this.options.xmlMode && voidElements.has(name)
     }
 
     onopentagname(name: string): void {
         if (this.lowerCaseTagNames) {
-            name = name.toLowerCase();
+            name = name.toLowerCase()
         }
-        this.tagname = name;
+        this.tagname = name
         if (
             !this.options.xmlMode &&
             Object.prototype.hasOwnProperty.call(openImpliesClose, name)
         ) {
-            let el;
+            let el
             while (
                 this.stack.length > 0 &&
                 openImpliesClose[name]?.has(
                     (el = this.stack[this.stack.length - 1]!)
                 )
             ) {
-                this.onclosetag(el);
+                this.onclosetag(el)
             }
         }
         if (!this.isVoidElement(name)) {
-            this.stack.push(name);
+            this.stack.push(name)
             if (foreignContextElements.has(name)) {
-                this.foreignContext.push(true);
+                this.foreignContext.push(true)
             } else if (htmlIntegrationElements.has(name)) {
-                this.foreignContext.push(false);
+                this.foreignContext.push(false)
             }
         }
-        this.cbs.onopentagname?.(name);
-        if (this.cbs.onopentag) this.attribs = {};
+        this.cbs.onopentagname?.(name)
+        if (this.cbs.onopentag) this.attribs = {}
     }
 
     onopentagend(): void {
-        this.updatePosition(1);
+        this.updatePosition(1)
         if (this.attribs) {
-            this.cbs.onopentag?.(this.tagname, this.attribs);
-            this.attribs = null;
+            this.cbs.onopentag?.(this.tagname, this.attribs)
+            this.attribs = null
         }
         if (this.cbs.onclosetag && this.isVoidElement(this.tagname)) {
-            this.cbs.onclosetag(this.tagname);
+            this.cbs.onclosetag(this.tagname)
         }
-        this.tagname = "";
+        this.tagname = ''
     }
 
     onclosetag(name: string): void {
-        this.updatePosition(1);
+        this.updatePosition(1)
         if (this.lowerCaseTagNames) {
-            name = name.toLowerCase();
+            name = name.toLowerCase()
         }
         if (
             foreignContextElements.has(name) ||
             htmlIntegrationElements.has(name)
         ) {
-            this.foreignContext.pop();
+            this.foreignContext.pop()
         }
         if (this.stack.length && !this.isVoidElement(name)) {
-            let pos = this.stack.lastIndexOf(name);
+            let pos = this.stack.lastIndexOf(name)
             if (pos !== -1) {
                 if (this.cbs.onclosetag) {
-                    pos = this.stack.length - pos;
+                    pos = this.stack.length - pos
                     while (pos--) {
                         // We know the stack has sufficient elements.
-                        this.cbs.onclosetag(this.stack.pop() as string);
+                        this.cbs.onclosetag(this.stack.pop() as string)
                     }
-                } else this.stack.length = pos;
-            } else if (name === "p" && !this.options.xmlMode) {
-                this.onopentagname(name);
-                this.closeCurrentTag();
+                } else this.stack.length = pos
+            } else if (name === 'p' && !this.options.xmlMode) {
+                this.onopentagname(name)
+                this.closeCurrentTag()
             }
-        } else if (!this.options.xmlMode && (name === "br" || name === "p")) {
-            this.onopentagname(name);
-            this.closeCurrentTag();
+        } else if (!this.options.xmlMode && (name === 'br' || name === 'p')) {
+            this.onopentagname(name)
+            this.closeCurrentTag()
         }
     }
 
@@ -324,92 +324,92 @@ export class Parser {
             this.options.recognizeSelfClosing ||
             this.foreignContext[this.foreignContext.length - 1]
         ) {
-            this.closeCurrentTag();
+            this.closeCurrentTag()
         } else {
-            this.onopentagend();
+            this.onopentagend()
         }
     }
 
     private closeCurrentTag() {
-        const name = this.tagname;
-        this.onopentagend();
+        const name = this.tagname
+        this.onopentagend()
         /*
          * Self-closing tags will be on the top of the stack
          * (cheaper check than in onclosetag)
          */
         if (this.stack[this.stack.length - 1] === name) {
-            this.cbs.onclosetag?.(name);
-            this.stack.pop();
+            this.cbs.onclosetag?.(name)
+            this.stack.pop()
         }
     }
 
     onattribname(name: string): void {
         if (this.lowerCaseAttributeNames) {
-            name = name.toLowerCase();
+            name = name.toLowerCase()
         }
-        this.attribname = name;
+        this.attribname = name
     }
 
     onattribdata(value: string): void {
-        this.attribvalue += value;
+        this.attribvalue += value
     }
 
     onattribend(quote: string | undefined | null): void {
-        this.cbs.onattribute?.(this.attribname, this.attribvalue, quote);
+        this.cbs.onattribute?.(this.attribname, this.attribvalue, quote)
         if (
             this.attribs &&
             !Object.prototype.hasOwnProperty.call(this.attribs, this.attribname)
         ) {
-            this.attribs[this.attribname] = this.attribvalue;
+            this.attribs[this.attribname] = this.attribvalue
         }
-        this.attribname = "";
-        this.attribvalue = "";
+        this.attribname = ''
+        this.attribvalue = ''
     }
 
     private getInstructionName(value: string) {
-        const idx = value.search(reNameEnd);
-        let name = idx < 0 ? value : value.substr(0, idx);
+        const idx = value.search(reNameEnd)
+        let name = idx < 0 ? value : value.substr(0, idx)
 
         if (this.lowerCaseTagNames) {
-            name = name.toLowerCase();
+            name = name.toLowerCase()
         }
 
-        return name;
+        return name
     }
 
     ondeclaration(value: string): void {
         if (this.cbs.onprocessinginstruction) {
-            const name = this.getInstructionName(value);
-            this.cbs.onprocessinginstruction(`!${name}`, `!${value}`);
+            const name = this.getInstructionName(value)
+            this.cbs.onprocessinginstruction(`!${name}`, `!${value}`)
         }
     }
 
     onprocessinginstruction(value: string): void {
         if (this.cbs.onprocessinginstruction) {
-            const name = this.getInstructionName(value);
-            this.cbs.onprocessinginstruction(`?${name}`, `?${value}`);
+            const name = this.getInstructionName(value)
+            this.cbs.onprocessinginstruction(`?${name}`, `?${value}`)
         }
     }
 
     oncomment(value: string): void {
-        this.updatePosition(4);
-        this.cbs.oncomment?.(value);
-        this.cbs.oncommentend?.();
+        this.updatePosition(4)
+        this.cbs.oncomment?.(value)
+        this.cbs.oncommentend?.()
     }
 
     oncdata(value: string): void {
-        this.updatePosition(1);
+        this.updatePosition(1)
         if (this.options.xmlMode || this.options.recognizeCDATA) {
-            this.cbs.oncdatastart?.();
-            this.cbs.ontext?.(value);
-            this.cbs.oncdataend?.();
+            this.cbs.oncdatastart?.()
+            this.cbs.ontext?.(value)
+            this.cbs.oncdataend?.()
         } else {
-            this.oncomment(`[CDATA[${value}]]`);
+            this.oncomment(`[CDATA[${value}]]`)
         }
     }
 
     onerror(err: Error): void {
-        this.cbs.onerror?.(err);
+        this.cbs.onerror?.(err)
     }
 
     onend(): void {
@@ -420,20 +420,20 @@ export class Parser {
                 this.cbs.onclosetag(this.stack[--i]!)
             );
         }
-        this.cbs.onend?.();
+        this.cbs.onend?.()
     }
 
     /**
      * Resets the parser to a blank state, ready to parse a new HTML document
      */
     public reset(): void {
-        this.cbs.onreset?.();
-        this.tokenizer.reset();
-        this.tagname = "";
-        this.attribname = "";
-        this.attribs = null;
-        this.stack = [];
-        this.cbs.onparserinit?.(this);
+        this.cbs.onreset?.()
+        this.tokenizer.reset()
+        this.tagname = ''
+        this.attribname = ''
+        this.attribs = null
+        this.stack = []
+        this.cbs.onparserinit?.(this)
     }
 
     /**
@@ -443,8 +443,8 @@ export class Parser {
      * @param data Document to parse.
      */
     public parseComplete(data: string): void {
-        this.reset();
-        this.end(data);
+        this.reset()
+        this.end(data)
     }
 
     /**
@@ -453,7 +453,7 @@ export class Parser {
      * @param chunk Chunk to parse.
      */
     public write(chunk: string): void {
-        this.tokenizer.write(chunk);
+        this.tokenizer.write(chunk)
     }
 
     /**
@@ -462,21 +462,21 @@ export class Parser {
      * @param chunk Optional final chunk to parse.
      */
     public end(chunk?: string): void {
-        this.tokenizer.end(chunk);
+        this.tokenizer.end(chunk)
     }
 
     /**
      * Pauses parsing. The parser won't emit events until `resume` is called.
      */
     public pause(): void {
-        this.tokenizer.pause();
+        this.tokenizer.pause()
     }
 
     /**
      * Resumes parsing after `pause` was called.
      */
     public resume(): void {
-        this.tokenizer.resume();
+        this.tokenizer.resume()
     }
 
     /**
@@ -486,7 +486,7 @@ export class Parser {
      * @deprecated
      */
     public parseChunk(chunk: string): void {
-        this.write(chunk);
+        this.write(chunk)
     }
     /**
      * Alias of `end`, for backwards compatibility.
@@ -495,6 +495,6 @@ export class Parser {
      * @deprecated
      */
     public done(chunk?: string): void {
-        this.end(chunk);
+        this.end(chunk)
     }
 }

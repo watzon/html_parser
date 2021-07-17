@@ -1,5 +1,5 @@
-import { decodeXML, decodeHTML, decodeHTMLStrict } from "./decode.ts";
-import { encodeXML, encodeHTML, encodeNonAsciiHTML } from "./encode.ts";
+import { decodeXML, decodeHTML, decodeHTMLStrict } from './decode.ts'
+import { encodeXML, encodeHTML, encodeNonAsciiHTML } from './encode.ts'
 
 /** The level of entities to support. */
 export enum EntityLevel {
@@ -41,7 +41,7 @@ interface DecodingOptions {
      * The level of entities to support.
      * @default EntityLevel.XML
      */
-    level?: EntityLevel;
+    level?: EntityLevel
     /**
      * Decoding mode. If `Legacy`, will support legacy entities not terminated
      * with a semicolon (`;`).
@@ -53,7 +53,7 @@ interface DecodingOptions {
      *
      * @default DecodingMode.Legacy
      */
-    mode?: DecodingMode;
+    mode?: DecodingMode
 }
 
 /**
@@ -66,16 +66,16 @@ export function decode(
     data: string,
     options: DecodingOptions | EntityLevel = EntityLevel.XML
 ): string {
-    const opts = typeof options === "number" ? { level: options } : options;
+    const opts = typeof options === 'number' ? { level: options } : options
 
     if (opts.level === EntityLevel.HTML) {
         if (opts.mode === DecodingMode.Strict) {
-            return decodeHTMLStrict(data);
+            return decodeHTMLStrict(data)
         }
-        return decodeHTML(data);
+        return decodeHTML(data)
     }
 
-    return decodeXML(data);
+    return decodeXML(data)
 }
 
 /**
@@ -89,16 +89,16 @@ export function decodeStrict(
     data: string,
     options: DecodingOptions | EntityLevel = EntityLevel.XML
 ): string {
-    const opts = typeof options === "number" ? { level: options } : options;
+    const opts = typeof options === 'number' ? { level: options } : options
 
     if (opts.level === EntityLevel.HTML) {
         if (opts.mode === DecodingMode.Legacy) {
-            return decodeHTML(data);
+            return decodeHTML(data)
         }
-        return decodeHTMLStrict(data);
+        return decodeHTMLStrict(data)
     }
 
-    return decodeXML(data);
+    return decodeXML(data)
 }
 
 /**
@@ -109,12 +109,12 @@ export interface EncodingOptions {
      * The level of entities to support.
      * @default EntityLevel.XML
      */
-    level?: EntityLevel;
+    level?: EntityLevel
     /**
      * Output format.
      * @default EncodingMode.Extensive
      */
-    mode?: EncodingMode;
+    mode?: EncodingMode
 }
 
 /**
@@ -127,22 +127,22 @@ export function encode(
     data: string,
     options: EncodingOptions | EntityLevel = EntityLevel.XML
 ): string {
-    const opts = typeof options === "number" ? { level: options } : options;
+    const opts = typeof options === 'number' ? { level: options } : options
 
     if (opts.level === EntityLevel.HTML) {
         if (opts.mode === EncodingMode.ASCII) {
-            return encodeNonAsciiHTML(data);
+            return encodeNonAsciiHTML(data)
         }
 
         // TODO Support opts.mode === 'UTF8'
 
-        return encodeHTML(data);
+        return encodeHTML(data)
     }
 
     // TODO Support opts.mode === 'UTF8'
 
     // ASCII and Extensive are equivalent
-    return encodeXML(data);
+    return encodeXML(data)
 }
 
 export {
@@ -154,7 +154,7 @@ export {
     // Legacy aliases (deprecated)
     encodeHTML as encodeHTML4,
     encodeHTML as encodeHTML5,
-} from "./encode.ts";
+} from './encode.ts'
 
 export {
     decodeXML,
@@ -166,4 +166,4 @@ export {
     decodeHTMLStrict as decodeHTML4Strict,
     decodeHTMLStrict as decodeHTML5Strict,
     decodeXML as decodeXMLStrict,
-} from "./decode.ts";
+} from './decode.ts'

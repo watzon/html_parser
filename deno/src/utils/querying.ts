@@ -1,4 +1,4 @@
-import { isTag, hasChildren, Node, Element } from "../Node.ts";
+import { isTag, hasChildren, Node, Element } from '../Node.ts'
 
 /**
  * Search a node and its children for nodes passing a test function.
@@ -15,8 +15,8 @@ export function filter(
     recurse = true,
     limit = Infinity
 ): Node[] {
-    if (!Array.isArray(node)) node = [node];
-    return find(test, node, recurse, limit);
+    if (!Array.isArray(node)) node = [node]
+    return find(test, node, recurse, limit)
 }
 
 /**
@@ -34,23 +34,23 @@ export function find(
     recurse: boolean,
     limit: number
 ): Node[] {
-    const result: Node[] = [];
+    const result: Node[] = []
 
     for (const elem of nodes) {
         if (test(elem)) {
-            result.push(elem);
-            if (--limit <= 0) break;
+            result.push(elem)
+            if (--limit <= 0) break
         }
 
         if (recurse && hasChildren(elem) && elem.children.length > 0) {
-            const children = find(test, elem.children, recurse, limit);
-            result.push(...children);
-            limit -= children.length;
-            if (limit <= 0) break;
+            const children = find(test, elem.children, recurse, limit)
+            result.push(...children)
+            limit -= children.length
+            if (limit <= 0) break
         }
     }
 
-    return result;
+    return result
 }
 
 /**
@@ -64,7 +64,7 @@ export function findOneChild(
     test: (elem: Node) => boolean,
     nodes: Node[]
 ): Node | undefined {
-    return nodes.find(test);
+    return nodes.find(test)
 }
 
 /**
@@ -80,20 +80,20 @@ export function findOne(
     nodes: Node[],
     recurse = true
 ): Element | null {
-    let elem = null;
+    let elem = null
 
     for (let i = 0; i < nodes.length && !elem; i++) {
-        const checked = nodes[i];
+        const checked = nodes[i]!
         if (!isTag(checked)) {
-            continue;
+            continue
         } else if (test(checked)) {
-            elem = checked;
+            elem = checked
         } else if (recurse && checked.children.length > 0) {
-            elem = findOne(test, checked.children);
+            elem = findOne(test, checked.children)
         }
     }
 
-    return elem;
+    return elem
 }
 
 /**
@@ -106,12 +106,12 @@ export function existsOne(
     nodes: Node[]
 ): boolean {
     return nodes.some(
-        (checked) =>
+        checked =>
             isTag(checked) &&
             (test(checked) ||
                 (checked.children.length > 0 &&
                     existsOne(test, checked.children)))
-    );
+    )
 }
 
 /**
@@ -127,15 +127,15 @@ export function findAll(
     test: (elem: Element) => boolean,
     nodes: Node[]
 ): Element[] {
-    const result: Element[] = [];
-    const stack = nodes.filter(isTag);
-    let elem;
+    const result: Element[] = []
+    const stack = nodes.filter(isTag)
+    let elem
     while ((elem = stack.shift())) {
-        const children = elem.children?.filter(isTag);
+        const children = elem.children?.filter(isTag)
         if (children && children.length > 0) {
-            stack.unshift(...children);
+            stack.unshift(...children)
         }
-        if (test(elem)) result.push(elem);
+        if (test(elem)) result.push(elem)
     }
-    return result;
+    return result
 }

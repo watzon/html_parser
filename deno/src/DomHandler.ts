@@ -1,7 +1,16 @@
-import { Node, Element, Document, NodeWithChildren, DataNode, Comment, Text, ProcessingInstruction } from './Node.ts';
+import {
+    Node,
+    Element,
+    Document,
+    NodeWithChildren,
+    DataNode,
+    Comment,
+    Text,
+    ProcessingInstruction,
+} from './Node.ts'
 import { ElementType } from './ElementType.ts'
 
-const reWhitespace = /\s+/g;
+const reWhitespace = /\s+/g
 
 export interface DomHandlerOptions {
     /**
@@ -11,7 +20,7 @@ export interface DomHandlerOptions {
      *
      * @default false
      */
-    withStartIndices?: boolean;
+    withStartIndices?: boolean
 
     /**
      * Add an `endIndex` property to nodes.
@@ -20,7 +29,7 @@ export interface DomHandlerOptions {
      *
      * @default false
      */
-    withEndIndices?: boolean;
+    withEndIndices?: boolean
 
     /**
      * Replace all whitespace with single spaces.
@@ -30,14 +39,14 @@ export interface DomHandlerOptions {
      * @default false
      * @deprecated
      */
-    normalizeWhitespace?: boolean;
+    normalizeWhitespace?: boolean
 
     /**
      * Treat the markup as XML.
      *
      * @default false
      */
-    xmlMode?: boolean;
+    xmlMode?: boolean
 }
 
 // Default options
@@ -45,43 +54,43 @@ const defaultOpts: DomHandlerOptions = {
     normalizeWhitespace: false,
     withStartIndices: false,
     withEndIndices: false,
-};
-
-interface ParserInterface {
-    startIndex: number | null;
-    endIndex: number | null;
 }
 
-type Callback = (error: Error | null, dom: Node[]) => void;
-type ElementCallback = (element: Element) => void;
+interface ParserInterface {
+    startIndex: number | null
+    endIndex: number | null
+}
+
+type Callback = (error: Error | null, dom: Node[]) => void
+type ElementCallback = (element: Element) => void
 
 export class DomHandler {
     /** The elements of the DOM */
-    public dom: Node[] = [];
+    public dom: Node[] = []
 
     /** The root element for the DOM */
-    public root = new Document(this.dom);
+    public root = new Document(this.dom)
 
     /** Called once parsing has completed. */
-    private readonly callback: Callback | null;
+    private readonly callback: Callback | null
 
     /** Settings for the handler. */
-    private readonly options: DomHandlerOptions;
+    private readonly options: DomHandlerOptions
 
     /** Callback whenever a tag is closed. */
-    private readonly elementCB: ElementCallback | null;
+    private readonly elementCB: ElementCallback | null
 
     /** Indicated whether parsing has been completed. */
-    private done = false;
+    private done = false
 
     /** Stack of open tags. */
-    protected tagStack: NodeWithChildren[] = [this.root];
+    protected tagStack: NodeWithChildren[] = [this.root]
 
     /** A data node that is still being written to. */
-    protected lastNode: DataNode | null = null;
+    protected lastNode: DataNode | null = null
 
     /** Reference to the parser instance. Used for location information. */
-    private parser: ParserInterface | null = null;
+    private parser: ParserInterface | null = null
 
     /**
      * @param callback Called once parsing has completed.
@@ -94,155 +103,155 @@ export class DomHandler {
         elementCB?: ElementCallback
     ) {
         // Make it possible to skip arguments, for backwards-compatibility
-        if (typeof options === "function") {
-            elementCB = options;
-            options = defaultOpts;
+        if (typeof options === 'function') {
+            elementCB = options
+            options = defaultOpts
         }
-        if (typeof callback === "object") {
-            options = callback;
-            callback = undefined;
+        if (typeof callback === 'object') {
+            options = callback
+            callback = undefined
         }
 
-        this.callback = callback ?? null;
-        this.options = options ?? defaultOpts;
-        this.elementCB = elementCB ?? null;
+        this.callback = callback ?? null
+        this.options = options ?? defaultOpts
+        this.elementCB = elementCB ?? null
     }
 
     public onparserinit(parser: ParserInterface): void {
-        this.parser = parser;
+        this.parser = parser
     }
 
     // Resets the handler back to starting state
     public onreset(): void {
-        this.dom = [];
-        this.root = new Document(this.dom);
-        this.done = false;
-        this.tagStack = [this.root];
-        this.lastNode = null;
-        this.parser = this.parser ?? null;
+        this.dom = []
+        this.root = new Document(this.dom)
+        this.done = false
+        this.tagStack = [this.root]
+        this.lastNode = null
+        this.parser = this.parser ?? null
     }
 
     // Signals the handler that parsing is done
     public onend(): void {
-        if (this.done) return;
-        this.done = true;
-        this.parser = null;
-        this.handleCallback(null);
+        if (this.done) return
+        this.done = true
+        this.parser = null
+        this.handleCallback(null)
     }
 
     public onerror(error: Error): void {
-        this.handleCallback(error);
+        this.handleCallback(error)
     }
 
     public onclosetag(): void {
-        this.lastNode = null;
+        this.lastNode = null
 
-        const elem = this.tagStack.pop() as Element;
+        const elem = this.tagStack.pop() as Element
 
         if (this.options.withEndIndices) {
-            elem.endIndex = this.parser!.endIndex;
+            elem.endIndex = this.parser!.endIndex
         }
 
-        if (this.elementCB) this.elementCB(elem);
+        if (this.elementCB) this.elementCB(elem)
     }
 
     public onopentag(name: string, attribs: { [key: string]: string }): void {
-        const type = this.options.xmlMode ? ElementType.Tag : undefined;
-        const element = new Element(name, attribs, undefined, type);
-        this.addNode(element);
-        this.tagStack.push(element);
+        const type = this.options.xmlMode ? ElementType.Tag : undefined
+        const element = new Element(name, attribs, undefined, type)
+        this.addNode(element)
+        this.tagStack.push(element)
     }
 
     public ontext(data: string): void {
-        const { normalizeWhitespace } = this.options;
-        const { lastNode } = this;
+        const { normalizeWhitespace } = this.options
+        const { lastNode } = this
 
         if (lastNode && lastNode.type === ElementType.Text) {
             if (normalizeWhitespace) {
                 lastNode.data = (lastNode.data + data).replace(
                     reWhitespace,
-                    " "
-                );
+                    ' '
+                )
             } else {
-                lastNode.data += data;
+                lastNode.data += data
             }
         } else {
             if (normalizeWhitespace) {
-                data = data.replace(reWhitespace, " ");
+                data = data.replace(reWhitespace, ' ')
             }
 
-            const node = new Text(data);
-            this.addNode(node);
-            this.lastNode = node;
+            const node = new Text(data)
+            this.addNode(node)
+            this.lastNode = node
         }
     }
 
     public oncomment(data: string): void {
         if (this.lastNode && this.lastNode.type === ElementType.Comment) {
-            this.lastNode.data += data;
-            return;
+            this.lastNode.data += data
+            return
         }
 
-        const node = new Comment(data);
-        this.addNode(node);
-        this.lastNode = node;
+        const node = new Comment(data)
+        this.addNode(node)
+        this.lastNode = node
     }
 
     public oncommentend(): void {
-        this.lastNode = null;
+        this.lastNode = null
     }
 
     public oncdatastart(): void {
-        const text = new Text("");
-        const node = new NodeWithChildren(ElementType.CDATA, [text]);
+        const text = new Text('')
+        const node = new NodeWithChildren(ElementType.CDATA, [text])
 
-        this.addNode(node);
+        this.addNode(node)
 
-        text.parent = node;
-        this.lastNode = text;
+        text.parent = node
+        this.lastNode = text
     }
 
     public oncdataend(): void {
-        this.lastNode = null;
+        this.lastNode = null
     }
 
     public onprocessinginstruction(name: string, data: string): void {
-        const node = new ProcessingInstruction(name, data);
-        this.addNode(node);
+        const node = new ProcessingInstruction(name, data)
+        this.addNode(node)
     }
 
     protected handleCallback(error: Error | null): void {
-        if (typeof this.callback === "function") {
-            this.callback(error, this.dom);
+        if (typeof this.callback === 'function') {
+            this.callback(error, this.dom)
         } else if (error) {
-            throw error;
+            throw error
         }
     }
 
     protected addNode(node: Node): void {
-        const parent = this.tagStack[this.tagStack.length - 1]!;
+        const parent = this.tagStack[this.tagStack.length - 1]!
         const previousSibling = parent.children[parent.children.length - 1] as
             | Node
-            | undefined;
+            | undefined
 
         if (this.options.withStartIndices) {
-            node.startIndex = this.parser!.startIndex;
+            node.startIndex = this.parser!.startIndex
         }
 
         if (this.options.withEndIndices) {
-            node.endIndex = this.parser!.endIndex;
+            node.endIndex = this.parser!.endIndex
         }
 
-        parent.children.push(node);
+        parent.children.push(node)
 
         if (previousSibling) {
-            node.prev = previousSibling;
-            previousSibling.next = node;
+            node.prev = previousSibling
+            previousSibling.next = node
         }
 
-        node.parent = parent;
-        this.lastNode = null;
+        node.parent = parent
+        this.lastNode = null
     }
 }
 
-export default DomHandler;
+export default DomHandler

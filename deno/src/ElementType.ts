@@ -1,23 +1,23 @@
 /** Types of elements found in htmlparser2's DOM */
 export enum ElementType {
     /** Type for the root element of a document */
-    Root = "root",
+    Root = 'root',
     /** Type for Text */
-    Text = "text",
+    Text = 'text',
     /** Type for <? ... ?> */
-    Directive = "directive",
+    Directive = 'directive',
     /** Type for <!-- ... --> */
-    Comment = "comment",
+    Comment = 'comment',
     /** Type for <script> tags */
-    Script = "script",
+    Script = 'script',
     /** Type for <style> tags */
-    Style = "style",
+    Style = 'style',
     /** Type for Any tag */
-    Tag = "tag",
+    Tag = 'tag',
     /** Type for <![CDATA[ ... ]]> */
-    CDATA = "cdata",
+    CDATA = 'cdata',
     /** Type for <!doctype ...> */
-    Doctype = "doctype",
+    Doctype = 'doctype',
 }
 
 /**
@@ -30,25 +30,25 @@ export function isTag(elem: { type: ElementType }): boolean {
         elem.type === ElementType.Tag ||
         elem.type === ElementType.Script ||
         elem.type === ElementType.Style
-    );
+    )
 }
 
 // Exports for backwards compatibility
 /** Type for the root element of a document */
-export const Root = ElementType.Root;
+export const Root = ElementType.Root
 /** Type for Text */
-export const Text = ElementType.Text;
+export const Text = ElementType.Text
 /** Type for <? ... ?> */
-export const Directive = ElementType.Directive;
+export const Directive = ElementType.Directive
 /** Type for <!-- ... --> */
-export const Comment = ElementType.Comment;
+export const Comment = ElementType.Comment
 /** Type for <script> tags */
-export const Script = ElementType.Script;
+export const Script = ElementType.Script
 /** Type for <style> tags */
-export const Style = ElementType.Style;
+export const Style = ElementType.Style
 /** Type for Any tag */
-export const Tag = ElementType.Tag;
+export const Tag = ElementType.Tag
 /** Type for <![CDATA[ ... ]]> */
-export const CDATA = ElementType.CDATA;
+export const CDATA = ElementType.CDATA
 /** Type for <!doctype ...> */
-export const Doctype = ElementType.Doctype;
+export const Doctype = ElementType.Doctype

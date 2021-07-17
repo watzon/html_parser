@@ -1,4 +1,4 @@
-import type { Parser, Handler } from "./Parser.ts";
+import type { Parser, Handler } from './Parser.ts'
 
 /**
  * Calls a specific handler function for all events that are encountered.
@@ -19,45 +19,45 @@ export default class MultiplexHandler implements Handler {
         value: string,
         quote: string | null | undefined
     ): void {
-        this.func("onattribute", name, value, quote);
+        this.func('onattribute', name, value, quote)
     }
     oncdatastart(): void {
-        this.func("oncdatastart");
+        this.func('oncdatastart')
     }
     oncdataend(): void {
-        this.func("oncdataend");
+        this.func('oncdataend')
     }
     ontext(text: string): void {
-        this.func("ontext", text);
+        this.func('ontext', text)
     }
     onprocessinginstruction(name: string, value: string): void {
-        this.func("onprocessinginstruction", name, value);
+        this.func('onprocessinginstruction', name, value)
     }
     oncomment(comment: string): void {
-        this.func("oncomment", comment);
+        this.func('oncomment', comment)
     }
     oncommentend(): void {
-        this.func("oncommentend");
+        this.func('oncommentend')
     }
     onclosetag(name: string): void {
-        this.func("onclosetag", name);
+        this.func('onclosetag', name)
     }
     onopentag(name: string, attribs: { [key: string]: string }): void {
-        this.func("onopentag", name, attribs);
+        this.func('onopentag', name, attribs)
     }
     onopentagname(name: string): void {
-        this.func("onopentagname", name);
+        this.func('onopentagname', name)
     }
     onerror(error: Error): void {
-        this.func("onerror", error);
+        this.func('onerror', error)
     }
     onend(): void {
-        this.func("onend");
+        this.func('onend')
     }
     onparserinit(parser: Parser): void {
-        this.func("onparserinit", parser);
+        this.func('onparserinit', parser)
     }
     onreset(): void {
-        this.func("onreset");
+        this.func('onreset')
     }
 }

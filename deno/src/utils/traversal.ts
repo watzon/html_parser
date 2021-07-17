@@ -1,6 +1,6 @@
-import { isTag, Node, Element, NodeWithChildren } from "../Node.ts";
+import { isTag, Node, Element, NodeWithChildren } from '../Node.ts'
 
-const emptyArray: Node[] = [];
+const emptyArray: Node[] = []
 /**
  * Get a node's children.
  *
@@ -8,11 +8,11 @@ const emptyArray: Node[] = [];
  * @returns `elem`'s children, or an empty array.
  */
 export function getChildren(elem: Node): Node[] {
-    return (elem as { children?: Node[] }).children ?? emptyArray;
+    return (elem as { children?: Node[] }).children ?? emptyArray
 }
 
-export function getParent(elem: Element): Element | null;
-export function getParent(elem: Node): NodeWithChildren | null;
+export function getParent(elem: Element): Element | null
+export function getParent(elem: Node): NodeWithChildren | null
 /**
  * Get a node's parent.
  *
@@ -20,7 +20,7 @@ export function getParent(elem: Node): NodeWithChildren | null;
  * @returns `elem`'s parent node.
  */
 export function getParent(elem: Node): NodeWithChildren | null {
-    return elem.parent || null;
+    return elem.parent || null
 }
 
 /**
@@ -34,20 +34,20 @@ export function getParent(elem: Node): NodeWithChildren | null {
  * @returns `elem`'s siblings.
  */
 export function getSiblings(elem: Node): Node[] {
-    const parent = getParent(elem);
-    if (parent != null) return getChildren(parent);
+    const parent = getParent(elem)
+    if (parent != null) return getChildren(parent)
 
-    const siblings = [elem];
-    let { prev, next } = elem;
+    const siblings = [elem]
+    let { prev, next } = elem
     while (prev != null) {
-        siblings.unshift(prev);
-        ({ prev } = prev);
+        siblings.unshift(prev)
+        ;({ prev } = prev)
     }
     while (next != null) {
-        siblings.push(next);
-        ({ next } = next);
+        siblings.push(next)
+        ;({ next } = next)
     }
-    return siblings;
+    return siblings
 }
 
 /**
@@ -61,7 +61,7 @@ export function getAttributeValue(
     elem: Element,
     name: string
 ): string | undefined {
-    return elem.attribs?.[name];
+    return elem.attribs?.[name]
 }
 
 /**
@@ -76,7 +76,7 @@ export function hasAttrib(elem: Element, name: string): boolean {
         elem.attribs != null &&
         Object.prototype.hasOwnProperty.call(elem.attribs, name) &&
         elem.attribs[name] != null
-    );
+    )
 }
 
 /**
@@ -86,7 +86,7 @@ export function hasAttrib(elem: Element, name: string): boolean {
  * @returns The tag name of `elem`.
  */
 export function getName(elem: Element): string {
-    return elem.name;
+    return elem.name
 }
 
 /**
@@ -96,9 +96,9 @@ export function getName(elem: Element): string {
  * @returns `elem`'s next sibling that is a tag.
  */
 export function nextElementSibling(elem: Node): Element | null {
-    let { next } = elem;
-    while (next !== null && !isTag(next)) ({ next } = next);
-    return next;
+    let { next } = elem
+    while (next !== null && !isTag(next)) ({ next } = next)
+    return next
 }
 
 /**
@@ -108,7 +108,7 @@ export function nextElementSibling(elem: Node): Element | null {
  * @returns `elem`'s previous sibling that is a tag.
  */
 export function prevElementSibling(elem: Node): Element | null {
-    let { prev } = elem;
-    while (prev !== null && !isTag(prev)) ({ prev } = prev);
-    return prev;
+    let { prev } = elem
+    while (prev !== null && !isTag(prev)) ({ prev } = prev)
+    return prev
 }
