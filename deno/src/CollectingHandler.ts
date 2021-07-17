@@ -22,7 +22,7 @@ export class CollectingHandler extends MultiplexHandler {
         this.cbs.onreset?.()
 
         for (const [name, ...args] of this.events) {
-            ;(this.cbs[name] as OptionalFunction)?.(...args)
+            (this.cbs[name] as OptionalFunction)?.(...args)
         }
     }
 }

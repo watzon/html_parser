@@ -5,19 +5,23 @@ import { filter, findOne } from './querying.ts'
 type TestType = (elem: Node) => boolean
 
 interface TestElementOpts {
+    // deno-lint-ignore camelcase
     tag_name?: string | ((name: string) => boolean)
+    // deno-lint-ignore camelcase
     tag_type?: string | ((name: string) => boolean)
+    // deno-lint-ignore camelcase
     tag_contains?: string | ((data?: string) => boolean)
     [attributeName: string]:
-        | undefined
-        | string
-        | ((attributeValue: string) => boolean)
+    | undefined
+    | string
+    | ((attributeValue: string) => boolean)
 }
 
 const Checks: Record<
-    string,
-    (value: string | undefined | ((str: string) => boolean)) => TestType
+string,
+(value: string | undefined | ((str: string) => boolean)) => TestType
 > = {
+    // deno-lint-ignore camelcase
     tag_name(name) {
         if (typeof name === 'function') {
             return (elem: Node) => isTag(elem) && name(elem.name)
@@ -26,12 +30,14 @@ const Checks: Record<
         }
         return (elem: Node) => isTag(elem) && elem.name === name
     },
+    // deno-lint-ignore camelcase
     tag_type(type) {
         if (typeof type === 'function') {
             return (elem: Node) => type(elem.type)
         }
         return (elem: Node) => elem.type === type
     },
+    // deno-lint-ignore camelcase
     tag_contains(data) {
         if (typeof data === 'function') {
             return (elem: Node) => isText(elem) && data(elem.data)
